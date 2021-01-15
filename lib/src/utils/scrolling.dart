@@ -41,6 +41,8 @@ class LinkedScrollControllerGroup {
   double get page => _pageNotifier.value;
   ValueListenable<double> get pageListenable => _pageNotifier;
 
+  void goToPage(double page) => _pageNotifier.value = page;
+
   /// Creates a new controller that is linked to any existing ones.
   ScrollController addAndGet() {
     final controller = _LinkedScrollController(this);

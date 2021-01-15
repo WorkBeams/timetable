@@ -106,6 +106,10 @@ class TimetableController<E extends Event> {
     );
   }
 
+  void goToDate(LocalDate date) {
+    var page = visibleRange.getTargetPageForFocusDate(date, firstDayOfWeek);
+    scrollControllers.goToPage(page);
+  }
   /// Discards any resources used by the controller.
   ///
   /// After this is called, the controller is not in a usable state and should

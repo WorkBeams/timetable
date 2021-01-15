@@ -43,28 +43,39 @@ class _DatePageViewState extends State<DatePageView> {
   Widget build(BuildContext context) {
     final visibleDays = widget.controller.visibleRange.visibleDays;
 
-    return Scrollable(
-      axisDirection: AxisDirection.right,
-      physics: TimetableScrollPhysics(widget.controller),
-      controller: _controller,
-      viewportBuilder: (context, position) {
-        return Viewport(
-          axisDirection: AxisDirection.right,
-          offset: position,
-          anchor: 0,
-          slivers: <Widget>[
-            SliverFillViewport(
-              viewportFraction: 1 / visibleDays,
-              delegate: SliverChildBuilderDelegate(
-                (context, index) => widget.builder(
-                  context,
-                  LocalDate.fromEpochDay(index + visibleDays ~/ 2),
-                ),
-              ),
-            ),
-          ],
-        );
-      },
-    );
+    // return Scrollable(
+    //   axisDirection: AxisDirection.right,
+    //   physics: TimetableScrollPhysics(widget.controller),
+    //   controller: _controller,
+    //   viewportBuilder: (context, position) {
+    //     return Viewport(
+    //       axisDirection: AxisDirection.right,
+    //       offset: position,
+    //       anchor: 0,
+    //       slivers: <Widget>[
+    //         SliverFillViewport(
+    //           viewportFraction: 1 / visibleDays,
+    //           delegate: SliverChildBuilderDelegate(
+    //             (context, index) => widget.builder(
+    //               context,
+    //               LocalDate.fromEpochDay(index + visibleDays ~/ 2),
+    //             ),
+    //           ),
+    //         ),
+    //       ],
+    //     );
+    //   },
+    // );
+
+    // NOTE: use this for now as we want a neverscollable physics anyways
+    // using the scrollable with viewport causes infinite hit testing exceptions
+    return ValueListenableBuilder<double>(
+        valueListenable: widget.controller.scrollControllers.pageListenable,
+        builder: (context, page, _) => Row(
+            children: List.generate(
+                visibleDays,
+                (index) => Expanded(
+                    child: widget.builder(context,
+                        LocalDate.fromEpochDay(page.round() + index))))));
   }
 }
